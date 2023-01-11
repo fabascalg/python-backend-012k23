@@ -20,6 +20,7 @@ def url():
 
 # PostMan
 
+# hemos añadido Thunder Client a VSC para procesar peticiones a servidor
 
 
 
