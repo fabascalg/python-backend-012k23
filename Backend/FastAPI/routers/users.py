@@ -1,8 +1,8 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import APIRouter, HTTPException
 
 from pydantic import BaseModel
 
-app = FastAPI()
+router = APIRouter()
 
 # documentación con Swagger: http://localhost:8000/docs
 # documentación con Redocly: http://localhost:8000/redoc
@@ -28,11 +28,11 @@ users_list = [User(id=1, name="Brais", surname="Moure", url="https://moure.dev",
 
 
 # devuelve toda la lista de usuarios
-@app.get("/usuarios")
+@router.get("/usuarios")
 async def usuarios():
     return users_list
 
-# @app.get("/usuariosjson")
+# @router.get("/usuariosjson")
 # async def jsonusuarios():
 #    return [{"name": "Gema", "surname": "Guerra", "url": "https://www.valoren.es", "age": 40},
 #            {"name": "Pepe", "surname": "González",
@@ -47,7 +47,7 @@ async def usuarios():
 # si se envía sin id, el programa responde que falta un campo!!!
 
 
-@app.get("/usuario/{id}")
+@router.get("/usuario/{id}")
 async def usuario(id: int):
     return search_user(id)
 
@@ -56,14 +56,14 @@ async def usuario(id: int):
 # userquery es como lo ha llamado Moure...
 
 
-@app.get("/usuario/")
+@router.get("/usuario/")
 async def usuario(id: int):
     return search_user(id)
 
 # añadir un usuario a la lista, revisando que el id no exista previamente!!! OJO FALLA
 
 
-@app.post("/usuario/", response_model=User, status_code=201)
+@router.post("/usuario/", response_model=User, status_code=201)
 async def usuario(user: User):
     if type(search_user(user.id)) == User:
         raise HTTPException(status_code=404, detail="El usuario ya existe")
@@ -71,7 +71,7 @@ async def usuario(user: User):
     return user
 
 
-@app.put("/usuario/")
+@router.put("/usuario/")
 async def usuario(user: User):
     for index, saved_user in enumerate(users_list):
         if saved_user.id == user.id:
@@ -90,7 +90,7 @@ def search_user(id: int):
         return {"error": "no se ha encontrado al usuario"}
 
 
-@app.delete("/usuario/{id}")
+@router.delete("/usuario/{id}")
 async def user(id: int):
     for index, saved_user in enumerate(users_list):
         if saved_user.id == id:

@@ -1,6 +1,11 @@
 from fastapi import FastAPI
+from routers import products, users
 
 app = FastAPI()
+
+# Routers
+app.include_router(products.router)
+
 
 # mapeo a raiz
 @app.get("/")
@@ -11,6 +16,10 @@ def root():
 @app.get("/url")
 def url():
     return {"url": "https://mouredev.com/python"}
+
+@app.get("/sumar/{operador1}/{operador2}")
+def sumar(operador1: int,operador2: int):
+    return operador1 + operador2
 
 # Iniciar el server: uvicorn main:app --reload
 # Detener el server: CTRL+C
